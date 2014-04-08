@@ -17,11 +17,11 @@ if [[ ! $(which fpm) ]]; then
 sudo gem install fpm
 fi
 
-RUBY_VERSION="2.1.1-github"
-SOURCE_FILE_NAME=ruby-${RUBY_VERSION}
+RUBY_VERSION="2.1.1"
+SOURCE_FILE_NAME=ruby-github-${RUBY_VERSION}
 INSTALL_DIR=/tmp/install
 WORKING_DIRECTORY=/tmp/build
-PACKAGE_NAME=librato-${SOURCE_FILE_NAME}_amd64.deb
+PACKAGE_NAME=${SOURCE_FILE_NAME}_amd64.deb
 GITHUB_REPO=https://github.com/github/ruby.git
 
 # clean any previous build artifacts
@@ -47,19 +47,19 @@ else
   cd ruby
 fi
 
-time (./configure --prefix=/usr --with-opt-dir=/usr/local && make && make install DESTDIR=${INSTALL_DIR})
+time (./configure --prefix=/usr/local --with-opt-dir=/usr/local && make && make install DESTDIR=${INSTALL_DIR})
 cd ..
 
 # package up the newly compiled ruby
-fpm -s dir -t deb -n ruby -v ${RUBY_VERSION} -C ${INSTALL_DIR} \
-  -p ruby-VERSION_ARCH.deb -d "libstdc++6 (>= 4.4.3)" \
+fpm -s dir -t deb -n ruby-github -v ${RUBY_VERSION} -C ${INSTALL_DIR} \
+  -p ruby-github-VERSION_ARCH.deb -d "libstdc++6 (>= 4.4.3)" \
   -d "libc6 (>= 2.6)" -d "libffi6 (>= 3.0.10)" -d "libgdbm3 (>= 1.8.3)" \
   -d "libncurses5 (>= 5.7)" -d "libreadline6 (>= 6.1)" \
-  -d "libssl0.9.8 (>= 0.9.8)" -d "zlib1g (>= 1:1.2.2)" \
-  usr/bin usr/lib usr/share/man usr/include
+  -d "libssl1.0.0 (>= 1.0.0)" -d "zlib1g (>= 1:1.2.2)" \
+  usr/local
 
 # copy the deb package back to your vagrant folder
-if [[ -f /vagrant ]]; then
-cp ${PACKAGE_NAME} /vagrant
+if [[ -d /vagrant ]]; then
+cp ${PACKAGE_NAME} /vagrant/
 fi
 
