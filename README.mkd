@@ -1,0 +1,11 @@
+# Build you a Ruby deb
+
+## tldr
+
+```
+vagrant up
+vagrant ssh -c /vagrant/package-ruby.sh
+```
+
+After awhile you'll get a `ruby-2.1.1-github_amd64.deb` file in this directory.
+
