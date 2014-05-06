@@ -3,9 +3,14 @@
 ## tldr
 
 ```
-vagrant up
-vagrant ssh -c /vagrant/package-ruby.sh
+vagrant up (trusty|precise)
+vagrant ssh (trusty|precise) -c /vagrant/package-ruby.sh
 ```
 
-After awhile you'll get a `ruby-2.1.1-github_amd64.deb` file in this directory.
+After awhile you'll get a `ruby-2.1.1-discourse_amd64.deb` file in this directory. Send it up to package cloud with:
+
+```
+package_cloud push librato/ruby/ubuntu/(trusty|precise) ruby-2.1.1-discourse_amd64.deb
+```
+
 
