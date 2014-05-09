@@ -2,15 +2,24 @@
 
 ## tldr
 
-```
-vagrant up (trusty|precise)
-vagrant ssh (trusty|precise) -c /vagrant/package-ruby.sh
-```
-
-After awhile you'll get a `ruby-2.1.1-discourse_amd64.deb` file in this directory. Send it up to package cloud with:
+Boot the kind of ubuntu you want. Hack the `Vagrantfile` to add others. This will provision the node with all the prereqs needed to compile ruby and build the deb.
 
 ```
-package_cloud push librato/ruby/ubuntu/(trusty|precise) ruby-2.1.1-discourse_amd64.deb
+vagrant up precise # or trusty, etc...
 ```
+
+Once its booted, figure out what kind of ruby you want to build, and make/edit the template for it. Then tell vagrant and ruby-build to build it.
+
+```
+vagrant ssh precise -c "/vagrant/build.sh ruby-2.1.2_discourse"
+```
+
+It'll try to figure out the ruby package name and version from that template name. If all goes well, after awhile you'll get a .deb in this directory. Upload it to package cloud with:
+
+```
+package_cloud push librato/ruby/ubuntu/precise ruby-discourse-2.1.2_amd64.deb
+```
+
+You'll need to package_cloud gem installed and configured with credentials already.
 
 
