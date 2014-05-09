@@ -9,7 +9,7 @@ sudo apt-get -y install libssl-dev libreadline-dev libyaml-dev build-essential o
 
 # bootstrap off the p0 to get the gem installed.
 if [[ ! $(which ruby) ]]; then
-sudo apt-get -y install ruby1.9.3
+sudo apt-get -y install ruby1.9.3 ruby1.9.1-dev
 fi
 
 # for some reason this installs over and over again. skip it if we can.
@@ -25,6 +25,8 @@ WORKING_DIRECTORY=/tmp/build
 PACKAGE_NAME=${SOURCE_FILE_NAME}_amd64.deb
 #GITHUB_REPO=https://github.com/github/ruby.git
 GITHUB_REPO=https://github.com/SamSaffron/ruby.git
+#GIT_BRANCH=origin/github_2_1
+GIT_BRANCH=61f8ffb40bcc5f32bbd89c23b2e39b4f1a64510d
 
 # clean any previous build artifacts
 rm -rf ${INSTALL_DIR}
@@ -43,10 +45,12 @@ cd ${WORKING_DIRECTORY}
 
 if [[ -d ruby ]]; then
   cd ruby
-  git pull
+  git fetch --all
+  git reset --hard $GIT_BRANCH
 else
   git clone $GITHUB_REPO
   cd ruby
+  git checkout $GIT_BRANCH
 fi
 
 time (autoconf && ./configure --prefix=/usr/local --with-opt-dir=/usr/local && make && make install DESTDIR=${INSTALL_DIR})
